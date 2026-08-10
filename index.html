@@ -6,7 +6,7 @@
     <title>PD私教 · 教练工资计算</title>
     
     <!-- PWA 配置 -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22PD%E7%A7%81%E6%95%99%E5%B7%A5%E8%B5%84%22%2C%22short_name%22%3A%22PD%E5%B7%A5%E8%B5%84%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23ffffff%22%2C%22theme_color%22%3A%22%231a73e8%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22pd-icon-192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22pd-icon-512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PD工资">
@@ -232,25 +232,12 @@
     <script>
         // 注册 Service Worker 实现离线缓存
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register(
-                    URL.createObjectURL(new Blob([`
-                        const CACHE_NAME = 'pd-salary-v1';
-                        const urlsToCache = ['/'];
-                        self.addEventListener('install', event => {
-                            event.waitUntil(
-                                caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-                            );
-                        });
-                        self.addEventListener('fetch', event => {
-                            event.respondWith(
-                                caches.match(event.request).then(response => response || fetch(event.request))
-                            );
-                        });
-                    `], { type: 'application/javascript' }))
-                );
-            });
-        }
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registered', reg))
+      .catch(err => console.log('SW registration failed', err));
+  });
+}
     </script>
 
     <script>
